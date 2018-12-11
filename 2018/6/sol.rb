@@ -23,16 +23,20 @@ for i in 0..max_x
     if graph[i][j].nil?
       min_distance = nil
       coord = nil
+      distances = []
 
       coords.each do |c|
         distance = distance(i, j, c[0], c[1])
+        distances << distance
         if(min_distance.nil? || distance < min_distance)
           coord = c
           min_distance = distance
         end
       end
 
-      graph[i][j] = graph[coord[0]][coord[1]].downcase
+      char = distances.count(min_distance) > 1 ? '.' : graph[coord[0]][coord[1]].downcase
+
+      graph[i][j] = char
     end
   end
 end
