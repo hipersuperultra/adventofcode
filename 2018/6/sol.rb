@@ -18,6 +18,11 @@ def distance(x, y, a, b)
   (x - a).abs + (y - b).abs
 end
 
+def chars_from_edges(graph)
+  graph[-1][0..-1] - ['.']
+  graph[0][0..-1] - ['.']
+end
+
 for i in 0..max_x
   for j in 0..max_y
     if graph[i][j].nil?
@@ -41,4 +46,12 @@ for i in 0..max_x
   end
 end
 
-graph.each { |c| puts c.inspect }
+# graph.each { |c| puts c.inspect }
+
+for i in 0..max_y
+  print "["
+  for j in 0..max_x
+    print "'#{graph[j][i]}',"
+  end
+  puts "]"
+end
