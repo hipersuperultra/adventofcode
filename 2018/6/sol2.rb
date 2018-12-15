@@ -5,6 +5,7 @@ max_x = nil
 max_y = nil
 
 class Node
+  TRESHOLD = 10000
   attr_accessor :distance, :label
   
   def initialize(label)
@@ -16,12 +17,16 @@ class Node
     @distance += distance
   end
 
+  def valid?
+    @distance < TRESHOLD
+  end
+
   def to_s
-    return label    
+    valid?.to_s
   end
 end
 
-File.foreach('input') { |line| coords << line.split(', ').map(&:to_i) }
+File.foreach('input2') { |line| coords << line.split(', ').map(&:to_i) }
 
 coords.each_with_index do |c, i|
   (graph[c[0]] ||= [])[c[1]] = Node.new(items[i])
@@ -30,8 +35,6 @@ coords.each_with_index do |c, i|
 end
 
 graph.each_with_index { |c, i| graph[i] = [] if c.nil? }
-
-# graph.each { |c| puts c.inspect }
 
 def distance(x, y, a, b)
   (x - a).abs + (y - b).abs
@@ -70,42 +73,24 @@ for i in 0..max_x
   end
 end
 
-
-# for i in 0..max_y
-#   print "["
-#   for j in 0..max_x
-#     print "'#{graph[j][i]}',"
-#   end
-#   puts "]"
-# end
-
-# Lets find out the biggest area covered
 char_counter = {}
 edges = chars_from_edges(graph)
 
-graph.each do |line| 
-  line.each do |node|
-    c = node.label
-    c.downcase!
-    unless edges.include? c
-      char_counter[c] = char_counter[c].nil? ? 1 : char_counter[c] + 1
+# Counts the distances to all nodes
+for i in 0..max_x
+  for j in 0..max_y
+    coords.each do |coord|
+      graph[i][j].add_distance(distance(i, j, coord[0], coord[1]))
     end
   end
 end
 
-puts char_counter.sort_by { |_key, value| value }.inspect
+# Counts valid locations
+valids = 0
+ for i in 0..max_x
+  for j in 0..max_y
+    valids += 1 if graph[i][j].valid?
+  end
+end
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+puts valids
