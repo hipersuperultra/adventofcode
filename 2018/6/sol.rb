@@ -1,10 +1,10 @@
 coords = []
 graph = []
-items = ('A'..'Z').to_a
+items = ('AAA'..'ZZZ').to_a
 max_x = nil
 max_y = nil
 
-File.foreach('input') { |line| coords << line.split(', ').map(&:to_i) }
+File.foreach('input2') { |line| coords << line.split(', ').map(&:to_i) }
 
 coords.each_with_index do |c, i|
   (graph[c[0]] ||= [])[c[1]] = items[i]
@@ -19,8 +19,13 @@ def distance(x, y, a, b)
 end
 
 def chars_from_edges(graph)
-  graph[-1][0..-1] - ['.']
-  graph[0][0..-1] - ['.']
+  chars = []
+  chars += (graph[-1][0..-1]).map { |c| c&.downcase }
+  chars += (graph[0][0..-1]).map { |c| c&.downcase }
+  chars += graph.map{ |line| line[-1]&.downcase }
+  chars += graph.map{ |line| line[0]&.downcase }
+  (chars - ['.', nil]).uniq!
+  chars += chars.map { |c| c&.upcase }
 end
 
 for i in 0..max_x
@@ -39,7 +44,7 @@ for i in 0..max_x
         end
       end
 
-      char = distances.count(min_distance) > 1 ? '.' : graph[coord[0]][coord[1]].downcase
+      char = distances.count(min_distance) > 1 ? '.' : graph[coord[0]][coord[1]]&.downcase
 
       graph[i][j] = char
     end
@@ -48,10 +53,40 @@ end
 
 # graph.each { |c| puts c.inspect }
 
-for i in 0..max_y
-  print "["
-  for j in 0..max_x
-    print "'#{graph[j][i]}',"
+# for i in 0..max_y
+#   print "["
+#   for j in 0..max_x
+#     print "'#{graph[j][i]}',"
+#   end
+#   puts "]"
+# end
+
+# Lets find out the biggest area covered
+char_counter = {}
+edges = chars_from_edges(graph)
+
+graph.each do |line| 
+  line.each do |c|
+    c&.downcase!
+    unless edges.include? c
+      char_counter[c] = char_counter[c].nil? ? 1 : char_counter[c] + 1
+    end
   end
-  puts "]"
 end
+
+puts char_counter.sort_by { |_key, value| value }.inspect
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

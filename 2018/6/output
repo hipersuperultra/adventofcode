@@ -21,3 +21,9 @@ a = [
 ["b", "b", "b", ".", "e", "e", "f", "f", "f"],
 ["b", "b", "b", ".", "f", "f", "f", "f", "F"],
 ]
+
+a.map{ |line| line[-1] }
+
+
+
+Lets think about the vertical edges.... 
