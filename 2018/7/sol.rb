@@ -62,4 +62,4 @@ end
 
 # puts graph
 
-puts Topsort.new(graph).post_order.map(&:to_s).reverse.inspect
+puts Topsort.new(graph).post_order.map(&:to_s).reverse.join
